@@ -25,7 +25,7 @@ exports.addNote = async(req, res) => {
 // Get notes from database
 exports.getNotes = async(req, res) => {
     try {
-        const notes = await NoteSchema.find().sort({ updatedAt: -1});
+        const notes = await NoteSchema.find().sort({ updatedAt: -1 });
         res.status(200).json(notes)
     } catch (error) {
         res.status(500).json({message: "Server error"})
@@ -61,7 +61,10 @@ exports.updateNote = async(req, res) => {
         if (!updatedNote) {
             res.status(404).json({message: 'Note not found'})
         }
-        res.status(200).json(updatedNote);
+        res.status(200).json({
+            message: "Note updated successfully",
+            updatedNote
+        });
 
     } catch (error) {
         console.error("Error updating note ", error)

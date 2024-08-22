@@ -1,7 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { addNote,getNotes, deleteNote, editNote } = require("../controllers/note")
+const { addNote,getNotes, deleteNote, updateNote } = require("../controllers/note")
+
 router.post('/add-note', addNote)
-    .post('/get-notes', getNotes)
+    .get('/get-notes', getNotes)
     .delete('/delete-note/:id', deleteNote)
-    .put('/update-note/:id', editNote)
+    .put('/update-note/:id', updateNote)
+
+    // test
+    .get('/', () => {
+        res.send("Hello world!")
+    })
+
+module.exports = router;

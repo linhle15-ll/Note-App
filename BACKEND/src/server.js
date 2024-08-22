@@ -1,5 +1,7 @@
 // env
-require('dotenv').config
+require('dotenv').config();
+// mongoose
+const mongoose = require('mongoose');
 // PORT
 const PORT = process.env.PORT || 5001
 
@@ -8,12 +10,8 @@ const cors = require('cors');
 const { readdirSync } = require('fs');
 const path = require('path');
 
-
 // create Express App
 const app = express();
-
-// create server instance
-const server = http.createServer(app)
 
 // Middlewares
 app.use(express.json());
@@ -22,8 +20,17 @@ app.use(express.json());
 app.use(cors())
 
 // connect to MongoDB
-const db = require("./db/db")
-db();
+const uri = process.env.MONGODB_URI;
+
+if (!uri) {
+    console.error('MongoDB URI is not defined');
+    process.exit(1);
+}
+
+mongoose.connect(uri)
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Failed to connect to MongoDB', err));
+
 
 // Routes
 readdirSync(path.join(__dirname, '../src/routes')).map((route) => {
@@ -36,7 +43,14 @@ app.use((err, req, res, next) => {
     res.status(500).send("Something broke!")
 })
 
-// listen to PORT
-server.listen(PORT, `Server is listening on port ${PORT}.`)
+// create http module": ""
+var http = require('http'); 
 
+// create server instance
+const server = http.createServer(app);
+
+// listen to PORT
+server.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}.`)
+})
 
