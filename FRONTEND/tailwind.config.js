@@ -31,15 +31,11 @@ module.exports = {
         'h11': ['0.875rem', { lineHeight: '1.2' }],
       },
       colors: {
-        mintGreen: "#00B8B2",
-        darkMintGreen: "#00A5A0",
-        darkGreen: "#02403E",
-        lightMintGreen: "#04a6a161",
-        lightGreen: "#04DB80",
-        white: "#FFFFFF",
-        red: "#e01b45",
-        grey: "#808080",
-        lightGrey: "#D3D3D3"
+        strongViolet: "#CF66FF",
+        pastelViolet: "#E5C0F6",
+        magnolia: "#F7F6FB",
+        pastelYellow: "#FCF6BC"
+
       },
       boxShadow: {
         custom: '0 4px 8px rgba(0, 0, 0, 0.1)', // Use the custom shadow color

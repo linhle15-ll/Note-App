@@ -1,51 +1,53 @@
-import React from "react"
+' use client '
+import React from "react";
+import Image from "next/image";
+import { SignIn } from "@clerk/nextjs";
+import signin from '../../../../public/sign-in.jpg'
+import logo from '../../../../public/note.png'
 
-const Page = () => {
+export default function SigninPage() {
   return (
     <div>
-      <section>
-        <div className="mx-auto max-w-screen-2xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div className="bg-strongViolet p-8 md:p-12 lg:px-16 lg:py-24">
-              <div className="mx-auto max-w-xl text-center">
-                <h2 className="text-2xl font-bold text-white md:text-3xl">
-                  Need an ALL IN ONE Note Assistant?
-                </h2>
+      <section className="bg-white">
+        <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
+          <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
+            <Image
+              alt="Sign in image"
+              src={signin}
+              layout="fill"
+              objectFit="cover"
+              className="absolute inset-0 h-full w-full object-cover opacity-80"
+            />
 
-                <p className="hidden text-white/90 sm:mt-4 sm:block">
-                  Let <span className="font-700">NOTIE</span> be be your <span className="font-700">Note Bestie</span> <br/>
-                  Notie, make Noting easy!
-                </p>
+            <div className="hidden lg:relative lg:block lg:p-12">
+              <a className="block text-white" href="/">
+                <Image
+                  src={logo}
+                  alt="Logo"
+                  width={56} // Set width for the logo
+                  height={32} // Set height for the logo
+                  
+                />
+              </a>
 
-                <div className="mt-4 md:mt-8">
-                  <a
-                    href="/sign-in"
-                    className="inline-block rounded-[50px] border border-white bg-white px-12 py-3 text-h10 text-strongViolet font-700 transition hover:bg-transparent hover:text-white focus:outline-none"
-                  >
-                    Let's note!
-                  </a>
-                </div>
-              </div>
+              <h2 className="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
+                Welcome to <strong className="font-extrabold text-strongViolet">Notie</strong> !
+              </h2>
+
+              <p className="mt-4 leading-relaxed text-white/90">
+                  Want to have a better experience with note? <br />
+                  Let <span className="font-700"> Notie </span>be your <span className="font-700">Note Bestie!</span>
+              </p>
             </div>
+          </section>
 
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-1 lg:grid-cols-2">
-              <img
-                alt=""
-                src="https://images.unsplash.com/photo-1621274790572-7c32596bc67f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=654&q=80"
-                className="h-40 w-full object-cover sm:h-56 md:h-full"
-              />
-
-              <img
-                alt=""
-                src="https://images.unsplash.com/photo-1567168544813-cc03465b4fa8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
-                className="h-40 w-full object-cover sm:h-56 md:h-full"
-              />
-            </div>
-          </div>
+          <main
+            className="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6"
+          >
+            < SignIn />
+          </main>
         </div>
       </section>
     </div>
   )
 }
-
-export default Page;

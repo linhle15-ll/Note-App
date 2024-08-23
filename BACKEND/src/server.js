@@ -1,7 +1,6 @@
 // env
 require('dotenv').config();
-// mongoose
-const mongoose = require('mongoose');
+
 // PORT
 const PORT = process.env.PORT || 5001
 
@@ -20,17 +19,8 @@ app.use(express.json());
 app.use(cors())
 
 // connect to MongoDB
-const uri = process.env.MONGODB_URI;
-
-if (!uri) {
-    console.error('MongoDB URI is not defined');
-    process.exit(1);
-}
-
-mongoose.connect(uri)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('Failed to connect to MongoDB', err));
-
+const db = require('../src/db/db')
+db();
 
 // Routes
 readdirSync(path.join(__dirname, '../src/routes')).map((route) => {
