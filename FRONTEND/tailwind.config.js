@@ -34,7 +34,9 @@ module.exports = {
         strongViolet: "#CF66FF",
         pastelViolet: "#E5C0F6",
         magnolia: "#F7F6FB",
-        pastelYellow: "#FCF6BC"
+        pastelYellow: "#FCF6BC",
+        lightGrey: "#D9D9D9",
+        darkGrey: "#777777"
 
       },
       boxShadow: {

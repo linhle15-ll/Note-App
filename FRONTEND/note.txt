@@ -1,0 +1,21 @@
+<button className = "flex flex-col items-center justify-center bg-lightMintGreen rounded-[20px] border-dashed border-grey w-[32%] h-[35%] cursor-pointer hover:bg-mintGreen" type = "button" onClick = {showModal}>
+    <div className = "font-poppins font-600"> + </div>
+    <div className = "font-poppins font-600"> Create New Budget </div>
+</button>
+
+https://www.npmjs.com/package/react-color
+
+
+2 stores:
+Note stores: add/delete/update/get note(s)
+The same for folder stores:
+
+Note: On delete a file/ folder, need to popup confirm modal
+(delete a modal means delete all the files within that modal so it is very dangerous)
+
+- Select: categorize note to their folders
+  + In folder store: when add new folder, add the folder to the folderArr
+  + map the elements in the folder arr to the select in create new note showModal
+  + other folder -> onClick -> popup add new folder modal to add new modal -> then add the file to that folder
+
+When they are all fine, we can add other features like allows add image(like text field) in to the note
