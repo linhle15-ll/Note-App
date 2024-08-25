@@ -2,17 +2,96 @@ import { create } from "zustand"
 import { devtools, subscribeWithSelector, persist } from 'zustand/middleware'
 import axios from 'axios'
 
-const initialValues = {
+const initialFolderValues = {
     foldersArr: [],
-    folderName: ""
+    files: [], // An array containing files added to the folder
+    name: ""
 }
 
-export const useFolderStore = () => {
+export const useFolderStore = create()(
     devtools(
         subscribeWithSelector(
-            persist(() => initialValues, { name: "Folder store"})
+            persist(() => initialFolderValues, { name: "Folder store"})
         ),
         { name: "Folder store" }
     )
+)
+
+export const handleChange = (value) => {
+    useFolderStore.setState({folderName: value})
+    console.log("Name", useFolderStore.getState().folderName)
 }
 
+export const handleReset = () => {
+    useFolderStore.setState({folderName: ""})
+}
+
+export const addFolder = async() => {
+    const { name } = useFolderStore.getState();
+
+    try {
+        const res = await axios.post('http://localhost:5000/api/add-folder', {
+            name,
+            files: []
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        
+        if (res.status === 200) {
+            console.log('Folder added successfully')
+            handleReset();
+        }
+        console.error('Error creating folder', res.status)
+    } catch (error) {
+        console.error('Error creating folder', error)
+    }
+}
+
+export const getFolders = async() => {
+    try {
+        const res = axios.get('http://localhost:5000/api/get-folders')
+
+        if (res.status === 200) {
+            useFolderStore.setState({foldersArr: res.data})
+            console.log('Folders fetched successfully') 
+        }
+        console.error("Error getting folders.", res.status)
+    } catch (error) {
+        console.error("Error getting folders.", error)
+    }
+}
+
+export const deleteFolder = async(id) => {
+    try {
+        const res = axios.delete(`http://localhost:5000/api/delete-folder/${id}`);
+        if (res.status === 200) {
+            console.log('Folder deleted successfully')
+            getFolders();
+        }
+        console.error("Error deleting folder.", res.status)
+    } catch (error) {
+        console.error("Error deleting folder.", error)
+    }
+}
+
+export const updateFolder = async(id, newName) => {
+    try {
+        const res = axios.put(`http://localhost:5000/api/update-folder/${id}`, {
+            name: newName
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (res.status === 200) {
+            console.log('Folder updated successfully')
+            getFolders();
+        }
+        console.error('Error updating folder', res.status)
+    } catch (error) {
+        console.error('Error updating folder', error)
+    }
+}

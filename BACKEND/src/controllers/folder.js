@@ -48,7 +48,7 @@ exports.updateFolder = async(req, res) => {
             id, 
             {
                 name, 
-                files
+                // files
             }, 
             {new: true}
         );

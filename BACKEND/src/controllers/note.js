@@ -7,11 +7,12 @@ exports.addNote = async(req, res) => {
         title,
         content,
         tags,
-        deadline
+        deadline,
+        folder
     })
 
     try {
-        if (!title || !content || !tags || !deadline) {
+        if (!title || !content || !tags) {
             return res.status(400).json({message: 'Required fields must be filled.'})
         }
 
@@ -44,7 +45,7 @@ exports.deleteNote = async(req, res) => {
 
 exports.updateNote = async(req, res) => {
     const { id } = req.params;
-    const { title, content, tags, deadline } = req.body;
+    const { title, content, tags, deadline, folder } = req.body;
 
     try {
         const updatedNote = await NoteSchema.findByIdAndUpdate(
@@ -53,7 +54,8 @@ exports.updateNote = async(req, res) => {
                 title,
                 content,
                 tags,
-                deadline
+                deadline,
+                folder
             }, 
             {new: true}
         );

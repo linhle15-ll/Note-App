@@ -2,7 +2,7 @@
 import React, { useRef, useState } from 'react';
 import { Button, Modal } from 'antd';
 import Draggable from 'react-draggable';
-import { useFolderStore } from  '../stores/folderStore'
+import { handleChange } from  '../stores/folderStore'
 
 const AddFolderModal = ( {open, setOpen} ) => {
   
@@ -77,8 +77,7 @@ const AddFolderModal = ( {open, setOpen} ) => {
       >
         <div className="text-darkGrey"> Folder name </div>
         <input type="text" 
-            value="folderName"
-            onChange= {(e) => useFolderStore.setState({ "folderName": e.target.value })}
+            onChange= {(e) => handleChange(e.target.value)}
             className="p-2 border border-lightGrey rounded-[5px] w-[100%] focus:ring-1 focus:ring-pastelViolet focus:border-strongViolet focus:outline-none">
         </input>
         
