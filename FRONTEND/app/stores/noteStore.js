@@ -1,17 +1,17 @@
 import { create } from "zustand"
 import { devtools, subscribeWithSelector, persist } from 'zustand/middleware'
 import axios from 'axios'
+import { title } from "process"
 
 const initialNoteValues = {
     notesArr: [],
-    formData: {
-        name: "",
-        title: "",
-        content: "",
-        tags: [],
-        deadline: [],
-        folder: [],
-    }
+
+    title: "",
+    content: "",
+    tag: "",
+    tags: [],
+    deadline: [],
+    folder: [],
 }
 
 export const useNoteStore = create()(
@@ -23,34 +23,57 @@ export const useNoteStore = create()(
     )
 )
 
-export const handleChange = (name, value) => {
-    useNoteStore.setState((state) => ({
-        formData: {
-            ...state.formData,
-            [name]:value
-        }
-    }))
+export const handleChangeTitle = (value) => {
+    useNoteStore.setState({title: value})
+}
+
+export const handleChangeContent = (value) => {
+    useNoteStore.setState({content: value})
+}
+
+export const handleChangeTags = (value) => {
+    useNoteStore.setState({tags: value})
+}
+
+export const handleChangeDeadline = (value) => {
+    useNoteStore.setState({deadline: value})
+}
+
+export const handleChangeFolder = (value) => {
+    useNoteStore.setState({folder: value})
+}
+
+export const handleChangeTag = (value) => {
+    useNoteStore.setState({tag: value})
+}
+export const addNewTag = (value) => {
+    const { tags, tag } = useNoteStore.getState();
+
+    if (tag.trim() !== ""){
+      tags.push(tag.trim());
+      useNoteStore.setState({tag: ""})
+    }
 }
 
 export const handleReset = () => {
-    useFolderStore.setState({ formData: {
+    useFolderStore.setState({ 
         name: "",
         title: "",
         content: "",
+        tag: "",
         tags: [],
         deadline: [],
         folder: [],
-    }})
+    })
 }
 
 export const addNote = async() => {
-    const { name, title, content, tags, deadline, folder } = useNoteStore.getState();
+    const { title, content, tags, deadline, folder } = useNoteStore.getState();
     const formData = {
-        name,
         title,
         content,
         tags,
-        deadline, // data Format
+        deadline,
         folder
     }
     
@@ -63,9 +86,11 @@ export const addNote = async() => {
         
         if (res.status === 200) {
             console.log('Note added successfully')
+            await getNotes();
             handleReset();
         }
         console.error('Error creating note', res.status)
+        handleReset();
     } catch (error) {
         console.error('Error creating note', error)
     }
@@ -77,7 +102,7 @@ export const getNotes = async() => {
         const res = axios.get('http://localhost:5000/api/get-notes')
 
         if (res.status === 200) {
-            useFolderStore.setState({filesArr: res.data})
+            useFolderStore.setState({notesArr: res.data})
             console.log('Notes fetched successfully') 
         }
         console.error("Error getting notes.", res.status)
@@ -100,8 +125,9 @@ export const deleteNote = async(id) => {
 }
 
 export const updateNote = async(id, name) => {
+    const { title, content, tags, deadline, folder } = useNoteStore.getState();
+
     const formData = {
-        name,
         title,
         content,
         tags,

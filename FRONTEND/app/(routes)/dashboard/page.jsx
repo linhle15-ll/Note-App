@@ -5,8 +5,12 @@ import SideMenu from "../../components/sideMenu"
 import { Plus } from '../..//utils/icons'
 import AddNoteModal from '../../components/addNoteModal'
 import AddFolderModal from '../../components/addFolderModal'
+import { useNoteStore } from '../../stores/noteStore'
 
 const Dashboard = () => {
+
+    const { notesArr } = useNoteStore.getState();
+
     // Open add note modal
     const [openNoteModal, setOpenNoteModal] = useState(false);
     const [openFolderModal, setOpenFolderModal] = useState(false);
@@ -60,14 +64,19 @@ const Dashboard = () => {
                         
                         {/* Add Folder */}
                         <div className="flex flex-row gap-3 max-w-[70%] mt-5">
-                            {/* {Folders.map((folder, key) => <div>
-                                </div>
+                            {notesArr.map((note, index) => 
+                                <NoteCard 
+                                    key={note._id}
+                                    title={note.title}
+                                    content={note.content}
+                                    tags={note.tags}
+                                    deadline={note.deadline}
+                                    folder={note.folder}
+                                    lastUpdated={note.updatedAt}
+                                />
+                                
                                 )
-                            } */}
-
-                            <div className="bg-pastelYellow rounded-[10px] h-30 w-80 p-3 hover:shadow-custom">
-                                hi
-                            </div>
+                            }
 
                         </div>
                     </div>

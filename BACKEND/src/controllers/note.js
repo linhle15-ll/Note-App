@@ -1,19 +1,19 @@
 const NoteSchema = require('../models/noteModel')
 
 exports.addNote = async(req, res) => {
-    const { title, content, tags, deadline } = req.body;
+    const { title, content, tags, deadline, folder } = req.body; // handle case when tags is an empty array
 
     const newNote = NoteSchema({
         title,
         content,
-        tags,
+        tags: tags || [],
         deadline,
         folder
     })
 
     try {
-        if (!title || !content || !tags) {
-            return res.status(400).json({message: 'Required fields must be filled.'})
+        if (!title || !content) {
+            return res.status(400).json({message: 'Title and content fields must be filled.'})
         }
 
         await newNote.save();

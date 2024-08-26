@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const NoteSchema = new mongoose.Schema ({
     type: {
         type: String,
-        required: true,
         default: "note"
     },
     title: {
@@ -21,21 +20,13 @@ const NoteSchema = new mongoose.Schema ({
     tags: {
         type: [String],
         required: false,
-        default: [],
-        // maxLength: 10
+        validate: [arrayLimit, `{PATH} exceeds the limit of 5.`]
         
     },
-    updatedAt: {
-        type: Date,
-        required: true,
-        default: Date.now,
-    },
-
     deadline: {
         type: Date,
         required: false
     },
-
     folder: {
         type: String,
         required: false
@@ -43,5 +34,9 @@ const NoteSchema = new mongoose.Schema ({
 }, {
     timestamps: true
 })
+
+function arrayLimit(val) {
+    return val.length <= 5;
+}
 
 module.exports = mongoose.model('Note', NoteSchema);
