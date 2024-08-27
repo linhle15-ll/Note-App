@@ -1,7 +1,7 @@
 const NoteSchema = require('../models/noteModel')
 
 exports.addNote = async(req, res) => {
-    const { title, content, tags, deadline, folder } = req.body; // handle case when tags is an empty array
+    const { title, content, tags, deadline, folder, backgroundColor } = req.body; // handle case when tags is an empty array
 
     const newNote = NoteSchema({
         title,
@@ -29,6 +29,18 @@ exports.getNotes = async(req, res) => {
     try {
         const notes = await NoteSchema.find().sort({ updatedAt: -1 });
         res.status(200).json(notes)
+    } catch (error) {
+        res.status(500).json({message: "Server error"})
+    }
+}
+
+exports.getNote = async(req, res) => {
+    const { id } = req.params; 
+    try {
+        const note = await NoteSchema.findById(id)
+
+        res.status(200).json(note)
+
     } catch (error) {
         res.status(500).json({message: "Server error"})
     }

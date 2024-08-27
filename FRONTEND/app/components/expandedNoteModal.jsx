@@ -1,32 +1,31 @@
 'use client'
-import React, { useState } from 'react';
-import { dateFormat } from '../utils/dateFormat'
-import { Edit, Delete } from '../utils/icons';
-import { useNoteStore, deleteNote, getNote } from '../stores/noteStore'
-import NoteModal from './noteModal';
-import ExpandedNoteModal from './expandedNoteModal';
+import React, { useEffect } from "react";
+import { Modal } from "antd";
+import { useNoteStore, getNote } from "../stores/noteStore";
+import { dateFormat } from "../utils/dateFormat";
 
-const NoteCard = ({ _id, title, content = '', tags, deadline, folder, lastUpdated, backgroundColor }) => {
-    const [selectedId, setSelectedId] = useState(null);
-    const [openNoteModal, setOpenNoteModal] = useState(false);
-    const [openExpandedNoteModal, setOpenExpandedNoteModal] = useState(false);
+const ExpandedNoteModal = ({ id, open, setOpen }) => {
+  const handleOk = () => {
+    setOpen(false);
+  };
+  const handleCancel = () => {
+    setOpen(false);
+  };
 
-    const showNoteModal = (_id) => {
-        setOpenNoteModal(true);
-        setSelectedId(_id);
-    }
+  useEffect(() => {
+    getNote(id);
+  },[])
 
-    const showExpandedNoteModal = (_id) => {
-        setOpenExpandedNoteModal(true);
-        // getNote(_id);
-        setSelectedId(_id);
-    }
-
-    return (
-        <div className="flex flex-col gap-[1.4px] min-w-80 rounded-[10px] py-3 px-4 border border-lightGrey hover:shadow-custom cursor:pointer" 
-            style={{backgroundColor: backgroundColor}}
-            onClick={() => showExpandedNoteModal(_id)}
-        >
+  const { title, content, tags, folder, deadline, lastUpdated } = useNoteStore.getState();
+  return (
+    <>
+      <Modal
+        title={title}
+        open={open}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <div className="flex flex-col gap-[1.4px] rounded-[10px] py-3 px-4">
             {/* tags */}
             <div className="flex flex-row justify-between items-center"> 
                 <div className="flex flex-wrap max-w-[70%]">
@@ -40,7 +39,6 @@ const NoteCard = ({ _id, title, content = '', tags, deadline, folder, lastUpdate
                         </div>
                     )}
                 </div>
-                <button onClick = {() => deleteNote(_id)}> {Delete} </button>
             </div>
 
             {/* title */}
@@ -58,14 +56,10 @@ const NoteCard = ({ _id, title, content = '', tags, deadline, folder, lastUpdate
                         <div className="text-darkGrey flex flex-row gap-1"> <span className="text-darkGrey font-600"> Last updated: </span> {dateFormat(lastUpdated)} </div>
                     )} 
                 </div> 
-                
-                <button onClick = {() => showNoteModal(_id)}> {Edit} </button> 
             </div>
-            
-            <NoteModal id={selectedId} open={openNoteModal} setOpen={setOpenNoteModal} isUpdated={true} isCreated={false} />
-            <ExpandedNoteModal id={selectedId} open={openExpandedNoteModal} setOpen={setOpenExpandedNoteModal} />
         </div>
-    )
-}
-
-export default NoteCard;    
+      </Modal>
+    </>
+  );
+};
+export default ExpandedNoteModal;

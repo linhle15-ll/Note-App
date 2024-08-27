@@ -19,7 +19,7 @@ const NoteModal = ( { id, open, setOpen, isUpdated, isCreated } ) => {
 
   const draggleRef = useRef(null);
 
-  const handleOk = async(e) => {
+  const handleOk = async() => {
     const { title, content } = useNoteStore.getState().formData;
 
     if (isCreated) {
@@ -57,6 +57,7 @@ const NoteModal = ( { id, open, setOpen, isUpdated, isCreated } ) => {
 
   // SketchPicker
   const [pickerVisible, setPickerVisible] = useState(false); 
+
   const handleSketchPickerOpen = (e) => {
     e.preventDefault();
     setPickerVisible(open);
@@ -110,7 +111,7 @@ const NoteModal = ( { id, open, setOpen, isUpdated, isCreated } ) => {
             <input type="text" required={isCreated? true : false}  name="title" id="title"
               onChange= {(e) => handleChangeTitle(e.target.value)}
               className="p-2 border border-lightGrey rounded-[5px] w-[100%] focus:ring-1 focus:ring-pastelViolet focus:border-strongViolet focus:outline-none"
-              placeholder="Enter note title*"
+              placeholder="Enter note title"
             >
             </input>
           </div>
@@ -119,9 +120,9 @@ const NoteModal = ( { id, open, setOpen, isUpdated, isCreated } ) => {
             <label htmlFor="content" className="text-darkGrey"> CONTENT </label>
             <textarea type="text" required={isCreated? true : false} name="content" id="content"
               onChange= {(e) => handleChangeContent(e.target.value)}
-              className="p-2 border border-lightGrey rounded-[5px] w-[100%] focus:ring-1 focus:ring-pastelViolet focus:border-strongViolet focus:outline-none"
-              placeholder="Enter note content*"
-              rows={10}
+              className="p-2 border border-lightGrey rounded-[5px] w-[100%] max-h-50 overflow-y-scroll focus:ring-1 focus:ring-pastelViolet focus:border-strongViolet focus:outline-none"
+              placeholder="Enter note content"
+              
             >
             </textarea>
           </div>
@@ -159,26 +160,26 @@ const NoteModal = ( { id, open, setOpen, isUpdated, isCreated } ) => {
                   {tags.map((tag, index) => (
                       <span key={index} className="flex items-center gap-1 text-sm text-slate-900 bg-lightGrey px-3 py-1 rounded">
                           # {tag}
-                          <button onClick = {() => handleRemoveTag(tag)}> {Delete} </button>
+                          <button onClick = {(e) => handleRemoveTag(tag, e)}> {Delete} </button>
                       </span>
                   ))}
               </div>
             )}
 
-            <label htmlFor="tags" className="text-darkGrey"> TAGS </label>
+            <label htmlFor="tag" className="text-darkGrey"> TAG </label>
             <div className="flex flex-row gap-3">
-              <input type="text" name="tags" id="tags"
+              <input type="text" name="tag" id="tag"
                 onChange={(e) => handleChangeTag(e.target.value)}
                 className="p-2 border border-lightGrey rounded-[5px] w-[50%] focus:ring-1 focus:ring-pastelViolet focus:border-strongViolet focus:outline-none">
               </input>
-              <button className="text-darkGrey" onClick={addNewTag}> {Add} </button>
+              <button className="text-darkGrey" onClick={() => addNewTag}> {Add} </button>
             </div>
           </div>
-          <div className="flex flex-col gap-3"> 
-            <button className="h-5 w-5 rounded-[5px]" style={{backgroundColor: backgroundColor}} onClick={pickerVisible? handleSketchPickerClose : handleSketchPickerOpen}> </button>
-
+          <div className="flex flex-col"> 
+            <label className="text-darkGrey"> NOTE COLOR  </label>
+            <button className=" w-11 h-5  rounded-[5px] border border-lightGrey hover:ring-pastelViolet hover:border-strongViolet hover:outline-none" style={{backgroundColor: backgroundColor}} onClick={pickerVisible? handleSketchPickerClose : handleSketchPickerOpen}></button> 
             {pickerVisible && (
-              <SketchPicker color={backgroundColor} onChange={(color) => handleChangeBackgroundColor(color)} /> 
+              <SketchPicker className="mt-3" color={backgroundColor} onChange={(color) => handleChangeBackgroundColor(color)} /> 
             )}
             
           </div>
