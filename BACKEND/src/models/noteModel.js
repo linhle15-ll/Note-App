@@ -30,6 +30,10 @@ const NoteSchema = new mongoose.Schema ({
     folder: {
         type: String,
         required: false
+    },
+    backgroundColor: {
+        type: String,
+        default: '#ffffff'
     }
 }, {
     timestamps: true

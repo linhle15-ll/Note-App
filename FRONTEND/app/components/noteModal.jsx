@@ -2,14 +2,13 @@
 import React, { useRef, useState } from 'react';
 import { Modal } from 'antd';
 import Draggable from 'react-draggable';
-
-import { useNoteStore, addNote, handleChangeTitle, handleChangeContent, handleChangeDeadline, handleChangeFolder, handleChangeTag, addNewTag } from '../stores/noteStore';
+import { SketchPicker } from 'react-color'
+import { useNoteStore, addNote, updateNote, handleChangeTitle, handleChangeContent, handleChangeDeadline, handleChangeFolder, handleChangeTag, addNewTag, handleRemoveTag, handleChangeBackgroundColor } from '../stores/noteStore';
 import { useFolderStore } from '../stores/folderStore';
 
-import { Add } from '../utils/icons';
+import { Add, Delete } from '../utils/icons';
 
-const AddNoteModal = ( {open, setOpen} ) => {
-  const [tagValue, setTagValue] = useState("");
+const NoteModal = ( { id, open, setOpen, isUpdated, isCreated } ) => {
   const [disabled, setDisabled] = useState(true);
   const [bounds, setBounds] = useState({
     left: 0,
@@ -23,11 +22,17 @@ const AddNoteModal = ( {open, setOpen} ) => {
   const handleOk = async(e) => {
     const { title, content } = useNoteStore.getState().formData;
 
-    if (!title ||!content) {
-      alert("Title and Content are required fiels.")
-      return;
+    if (isCreated) {
+      if (!title ||!content){
+        alert("Title and Content are required fiels.")
+        return;
+      }
+      await addNote();
     }
-    await addNote();
+    else if (isUpdated) {
+      await updateNote(id);
+    }
+
     setOpen(false);
   };
 
@@ -50,7 +55,20 @@ const AddNoteModal = ( {open, setOpen} ) => {
     });
   };
 
-  const { tags } = useNoteStore.getState();
+  // SketchPicker
+  const [pickerVisible, setPickerVisible] = useState(false); 
+  const handleSketchPickerOpen = (e) => {
+    e.preventDefault();
+    setPickerVisible(open);
+  }
+
+  const handleSketchPickerClose = (e) => {
+    e.preventDefault();
+    setPickerVisible(false);
+  }
+
+  const { tags, backgroundColor } = useNoteStore.getState();
+
   return (
     <>
       <Modal
@@ -69,7 +87,7 @@ const AddNoteModal = ( {open, setOpen} ) => {
               setDisabled(true);
             }}
           >
-            <div className="text-strongViolet text-h9"> Add New Note </div>
+            <div className="text-strongViolet text-h9"> { isCreated? "Add New Note" : "Update Note" } </div>
           </div>
         }
         open={open}
@@ -89,17 +107,17 @@ const AddNoteModal = ( {open, setOpen} ) => {
         <form className="flex flex-col gap-2">
           <div>
             <label htmlFor="title" className="text-darkGrey"> TITLE </label>
-            <input type="text" required="true" name="title" id="title"
+            <input type="text" required={isCreated? true : false}  name="title" id="title"
               onChange= {(e) => handleChangeTitle(e.target.value)}
               className="p-2 border border-lightGrey rounded-[5px] w-[100%] focus:ring-1 focus:ring-pastelViolet focus:border-strongViolet focus:outline-none"
-              placeholer="Enter note title*"
+              placeholder="Enter note title*"
             >
             </input>
           </div>
 
           <div>
             <label htmlFor="content" className="text-darkGrey"> CONTENT </label>
-            <textarea type="text" required="true" name="content" id="content"
+            <textarea type="text" required={isCreated? true : false} name="content" id="content"
               onChange= {(e) => handleChangeContent(e.target.value)}
               className="p-2 border border-lightGrey rounded-[5px] w-[100%] focus:ring-1 focus:ring-pastelViolet focus:border-strongViolet focus:outline-none"
               placeholder="Enter note content*"
@@ -110,7 +128,7 @@ const AddNoteModal = ( {open, setOpen} ) => {
 
           <div>
             <label htmlFor="date" className="text-darkGrey"> DEADLINE </label>
-            <input type="date" required="false" name="date" id="date"
+            <input type="date" name="date" id="date"
               onChange= {(e) => handleChangeDeadline(e.target.value)}
               className="p-2 border border-lightGrey rounded-[5px] w-[100%] focus:ring-1 focus:ring-pastelViolet focus:border-strongViolet focus:outline-none">
             </input>
@@ -119,7 +137,7 @@ const AddNoteModal = ( {open, setOpen} ) => {
           <div className="flex flex-col">
             <label htmlFor="folder" className="text-darkGrey"> FOLDER </label>
             <select name="folder" id="folder" 
-              onChangeFolder={(e) => handleChangeFolder(e.target.value)}
+              onChange={(e) => handleChangeFolder(e.target.value)}
               className="p2 border border-lightGrey rounded-[5px] w-[50%] h-9 focus:ring-1 focus:ring-pastelViolet focus:border-strongViolet focus:outline-none"
             >
               <option value=""> 
@@ -141,6 +159,7 @@ const AddNoteModal = ( {open, setOpen} ) => {
                   {tags.map((tag, index) => (
                       <span key={index} className="flex items-center gap-1 text-sm text-slate-900 bg-lightGrey px-3 py-1 rounded">
                           # {tag}
+                          <button onClick = {() => handleRemoveTag(tag)}> {Delete} </button>
                       </span>
                   ))}
               </div>
@@ -148,12 +167,20 @@ const AddNoteModal = ( {open, setOpen} ) => {
 
             <label htmlFor="tags" className="text-darkGrey"> TAGS </label>
             <div className="flex flex-row gap-3">
-              <input type="text" required="false" name="tags" id="tags"
+              <input type="text" name="tags" id="tags"
                 onChange={(e) => handleChangeTag(e.target.value)}
                 className="p-2 border border-lightGrey rounded-[5px] w-[50%] focus:ring-1 focus:ring-pastelViolet focus:border-strongViolet focus:outline-none">
               </input>
               <button className="text-darkGrey" onClick={addNewTag}> {Add} </button>
             </div>
+          </div>
+          <div className="flex flex-col gap-3"> 
+            <button className="h-5 w-5 rounded-[5px]" style={{backgroundColor: backgroundColor}} onClick={pickerVisible? handleSketchPickerClose : handleSketchPickerOpen}> </button>
+
+            {pickerVisible && (
+              <SketchPicker color={backgroundColor} onChange={(color) => handleChangeBackgroundColor(color)} /> 
+            )}
+            
           </div>
         </form>
 
@@ -161,4 +188,4 @@ const AddNoteModal = ( {open, setOpen} ) => {
     </>
   );
 };
-export default AddNoteModal;
+export default NoteModal;

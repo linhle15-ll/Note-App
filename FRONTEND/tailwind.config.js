@@ -36,7 +36,8 @@ module.exports = {
         magnolia: "#F7F6FB",
         pastelYellow: "#FCF6BC",
         lightGrey: "#D9D9D9",
-        darkGrey: "#777777"
+        darkGrey: "#777777",
+        red: "#FF0000"
 
       },
       boxShadow: {

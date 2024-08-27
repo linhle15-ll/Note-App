@@ -8,7 +8,8 @@ exports.addNote = async(req, res) => {
         content,
         tags: tags || [],
         deadline,
-        folder
+        folder, 
+        backgroundColor
     })
 
     try {
@@ -45,7 +46,7 @@ exports.deleteNote = async(req, res) => {
 
 exports.updateNote = async(req, res) => {
     const { id } = req.params;
-    const { title, content, tags, deadline, folder } = req.body;
+    const { title, content, tags, deadline, folder, backgroundColor} = req.body;
 
     try {
         const updatedNote = await NoteSchema.findByIdAndUpdate(
@@ -55,7 +56,8 @@ exports.updateNote = async(req, res) => {
                 content,
                 tags,
                 deadline,
-                folder
+                folder,
+                backgroundColor
             }, 
             {new: true}
         );

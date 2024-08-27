@@ -1,7 +1,6 @@
 import { create } from "zustand"
 import { devtools, subscribeWithSelector, persist } from 'zustand/middleware'
 import axios from 'axios'
-import { title } from "process"
 
 const initialNoteValues = {
     notesArr: [],
@@ -10,8 +9,9 @@ const initialNoteValues = {
     content: "",
     tag: "",
     tags: [],
-    deadline: [],
-    folder: [],
+    deadline: "",
+    folder: "",
+    backgroundColor: "#ffffff",
 }
 
 export const useNoteStore = create()(
@@ -46,7 +46,7 @@ export const handleChangeFolder = (value) => {
 export const handleChangeTag = (value) => {
     useNoteStore.setState({tag: value})
 }
-export const addNewTag = (value) => {
+export const addNewTag = () => {
     const { tags, tag } = useNoteStore.getState();
 
     if (tag.trim() !== ""){
@@ -55,26 +55,38 @@ export const addNewTag = (value) => {
     }
 }
 
+export const handleChangeBackgroundColor = (color) => {
+    useNoteStore.setState({ backgroundColor: color.hex})
+}
+
 export const handleReset = () => {
-    useFolderStore.setState({ 
+    useNoteStore.setState({ 
         name: "",
         title: "",
         content: "",
         tag: "",
         tags: [],
-        deadline: [],
-        folder: [],
+        deadline: "",
+        folder: "",
+        backgroundColor: "#ffffff",
     })
 }
 
-export const addNote = async() => {
-    const { title, content, tags, deadline, folder } = useNoteStore.getState();
+export const handleRemoveTag = (tagToRemove, e) => {
+    e.preventDefault();
+    const { tags } = useNoteStore.getState();
+    return useNoteStore.setState({tag: tags.filter((tag) => tag != tagToRemove)});
+}
+
+export const addNote = async(e) => {
+    const { title, content, tags, deadline, folder, backgroundColor } = useNoteStore.getState();
     const formData = {
         title,
         content,
         tags,
         deadline,
-        folder
+        folder,
+        backgroundColor
     }
     
     try {
@@ -85,7 +97,7 @@ export const addNote = async() => {
         })
         
         if (res.status === 200) {
-            console.log('Note added successfully')
+            console.log('Note added successfully', res)
             await getNotes();
             handleReset();
         }
@@ -93,19 +105,20 @@ export const addNote = async() => {
         handleReset();
     } catch (error) {
         console.error('Error creating note', error)
+        handleReset()
     }
+
 }
 
 export const getNotes = async() => {
-
     try {
-        const res = axios.get('http://localhost:5000/api/get-notes')
+        const res = await axios.get('http://localhost:5000/api/get-notes')
 
         if (res.status === 200) {
-            useFolderStore.setState({notesArr: res.data})
-            console.log('Notes fetched successfully') 
+            await useNoteStore.setState({ notesArr: res.data })
+            console.log('Notes fetched successfully', useNoteStore.getState().notesArr) 
         }
-        console.error("Error getting notes.", res.status)
+        console.error("Error getting notes.", useNoteStore.getState().notesArr)
     } catch (error) {
         console.error("Error getting notes.", error)
     }
@@ -118,21 +131,22 @@ export const deleteNote = async(id) => {
             console.log('Note deleted successfully')
             getNotes();
         }
-        console.error("Error deleting note.", res.status)
+        console.error("Error deleting note.", res)
     } catch (error) {
         console.error("Error deleting note.", error)
     }
 }
 
-export const updateNote = async(id, name) => {
-    const { title, content, tags, deadline, folder } = useNoteStore.getState();
+export const updateNote = async(id) => {
+    const { title, content, tags, deadline, folder, backgroundColor} = useNoteStore.getState();
 
     const formData = {
         title,
         content,
         tags,
-        deadline, // data Format
-        folder
+        deadline,
+        folder,
+        backgroundColor
     }
 
     try {
@@ -144,10 +158,13 @@ export const updateNote = async(id, name) => {
         
         if (res.status === 200) {
             console.log('Note updated successfully')
-            getNotes();
+            await getNotes();
+            handleReset();
         }
         console.error('Error updating note', res.status)
+        handleReset();
     } catch (error) {
         console.error('Error updating note', error)
+        handleReset();
     }
 }

@@ -4,7 +4,7 @@ import { Button, Modal } from 'antd';
 import Draggable from 'react-draggable';
 import { handleChange } from  '../stores/folderStore'
 
-const AddFolderModal = ( {open, setOpen} ) => {
+const FolderModal = ( {open, setOpen} ) => {
   
   const [disabled, setDisabled] = useState(true);
   const [bounds, setBounds] = useState({
@@ -85,4 +85,4 @@ const AddFolderModal = ( {open, setOpen} ) => {
     </>
   );
 };
-export default AddFolderModal;
+export default FolderModal;

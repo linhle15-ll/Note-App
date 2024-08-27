@@ -1,6 +1,9 @@
 import React from 'react'
+import Image from 'next/image';
 import Header from '../components/homeHeader';
 import { currentUser } from '@clerk/nextjs/server';
+import homeimg from '../public/homeimg.avif'
+import homeimg2 from '../public/homeimg2.avif'
 
 export default function Home() {
 
@@ -28,23 +31,27 @@ export default function Home() {
                     href={user ? "/dashboard" : "/sign-in"}
                     className="font-700 text-h10 inline-block rounded border border-white bg-white px-12 py-3 text-strongViolet transition hover:bg-transparent hover:text-white focus:outline-none"
                   >
-                    Let's note!
+                    Let&apos;s note!
                   </a>
                 </div>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4 md:grid-cols-1 lg:grid-cols-2">
-              <img
+              <Image
                 alt=""
-                src="https://images.unsplash.com/photo-1621274790572-7c32596bc67f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=654&q=80"
+                src={homeimg}
                 className="h-40 w-full object-cover sm:h-56 md:h-full"
+                width={774}
+                height={800}
               />
 
-              <img
+              <Image
                 alt=""
-                src="https://images.unsplash.com/photo-1567168544813-cc03465b4fa8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
+                src={homeimg2}
                 className="h-40 w-full object-cover sm:h-56 md:h-full"
+                width={774}
+                height={800}
               />
             </div>
           </div>
