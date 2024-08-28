@@ -12,15 +12,12 @@ const ExpandedNoteModal = ({ id, open, setOpen }) => {
     setOpen(false);
   };
 
-  useEffect(() => {
-    getNote(id);
-  },[])
-
   const { title, content, tags, folder, deadline, lastUpdated } = useNoteStore.getState();
+  
   return (
     <>
       <Modal
-        title={title}
+        title={`Note ${title}`}
         open={open}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -42,14 +39,24 @@ const ExpandedNoteModal = ({ id, open, setOpen }) => {
             </div>
 
             {/* title */}
-            <div className="font-700 text-h8"> {title} </div>
-            <div>{content.slice(0,60)}{content.length > 60 ? "..." : ""} </div>
+            <div className="font-700 text-h8 mt-5"> {title} </div>
+            <div className="mt-5 max-h-80 overflow-y-scroll"> {content} </div>
+
+            {deadline === null  && (
+                <div className="text-darkGrey flex flex-row gap-1 mt-5"> <span className='text-darkGrey font-600'>No deadline set</span> </div>
+            )}
             {deadline !== null  && (
-                <div className="text-darkGrey flex flex-row gap-1"> <span className='text-darkGrey font-600'>Deadline: </span>{dateFormat(deadline)} </div>
+                <div className="text-darkGrey flex flex-row gap-1 mt-5"> <span className='text-darkGrey font-600'>Deadline: </span>{dateFormat(deadline)} </div>
             )}
             
-            
-            <div className="text-darkGrey font-600"> Folder: <span className="font-normal"> {folder} </span></div>
+            {folder.length > 0 &&(
+                <div className="text-darkGrey font-600 mt-5"> Folder: <span className="font-normal"> {folder} </span></div>
+            )}
+
+            {folder.length === 0 && (
+                <div className='text-darkGrey font-600'> No folder set </div>
+            )}
+
             <div className="flex flex-row justify-between"> 
                 <div className="text-darkGrey font-normal"> 
                         {lastUpdated !== null  && (

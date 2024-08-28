@@ -17,9 +17,9 @@ export const useFolderStore = create()(
     )
 )
 
-export const handleChange = (value) => {
-    useFolderStore.setState({folderName: value})
-    console.log("Name", useFolderStore.getState().folderName)
+export const handleChangeName = (value) => {
+    useFolderStore.setState({name: value})
+    console.log("Folder Name", useFolderStore.getState().name)
 }
 
 export const handleReset = () => {
@@ -27,12 +27,12 @@ export const handleReset = () => {
 }
 
 export const addFolder = async() => {
-    const { name } = useFolderStore.getState();
+    const { name, files } = useFolderStore.getState();
 
     try {
         const res = await axios.post('http://localhost:5000/api/add-folder', {
             name,
-            files: []
+            files
         }, {
             headers: {
                 'Content-Type': 'application/json'
@@ -41,21 +41,24 @@ export const addFolder = async() => {
         
         if (res.status === 200) {
             console.log('Folder added successfully')
+            useFolderStore.setState({ foldersArr: res.data})
             handleReset();
         }
         console.error('Error creating folder', res.status)
+        handleReset();
     } catch (error) {
         console.error('Error creating folder', error)
+        handleReset();
     }
 }
 
 export const getFolders = async() => {
     try {
-        const res = axios.get('http://localhost:5000/api/get-folders')
+        const res = await axios.get('http://localhost:5000/api/get-folders')
 
         if (res.status === 200) {
-            useFolderStore.setState({foldersArr: res.data})
-            console.log('Folders fetched successfully') 
+            useFolderStore.setState({ foldersArr: res.data })
+            console.log('Folders fetched successfully', foldersArr) 
         }
         console.error("Error getting folders.", res.status)
     } catch (error) {
@@ -65,7 +68,7 @@ export const getFolders = async() => {
 
 export const deleteFolder = async(id) => {
     try {
-        const res = axios.delete(`http://localhost:5000/api/delete-folder/${id}`);
+        const res = await axios.delete(`http://localhost:5000/api/delete-folder/${id}`);
         if (res.status === 200) {
             console.log('Folder deleted successfully')
             getFolders();
@@ -78,7 +81,7 @@ export const deleteFolder = async(id) => {
 
 export const updateFolder = async(id, newName) => {
     try {
-        const res = axios.put(`http://localhost:5000/api/update-folder/${id}`, {
+        const res = await axios.put(`http://localhost:5000/api/update-folder/${id}`, {
             name: newName
         }, {
             headers: {

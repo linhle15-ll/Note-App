@@ -20,7 +20,7 @@ const NoteModal = ( { id, open, setOpen, isUpdated, isCreated } ) => {
   const draggleRef = useRef(null);
 
   const handleOk = async() => {
-    const { title, content } = useNoteStore.getState().formData;
+    const { title, content } = useNoteStore.getState();
 
     if (isCreated) {
       if (!title ||!content){
@@ -68,8 +68,8 @@ const NoteModal = ( { id, open, setOpen, isUpdated, isCreated } ) => {
     setPickerVisible(false);
   }
 
-  const { tags, backgroundColor } = useNoteStore.getState();
-
+  const { tags, backgroundColor, title, content, deadline, lastUpdated, folder, tag } = useNoteStore.getState();
+  
   return (
     <>
       <Modal
@@ -106,34 +106,41 @@ const NoteModal = ( { id, open, setOpen, isUpdated, isCreated } ) => {
         )}
       >
         <form className="flex flex-col gap-2">
-          <div>
+          <>
             <label htmlFor="title" className="text-darkGrey"> TITLE </label>
+            
             <input type="text" required={isCreated? true : false}  name="title" id="title"
               onChange= {(e) => handleChangeTitle(e.target.value)}
               className="p-2 border border-lightGrey rounded-[5px] w-[100%] focus:ring-1 focus:ring-pastelViolet focus:border-strongViolet focus:outline-none"
-              placeholder="Enter note title"
+              placeholder={isCreated? "Enter note title" : title}
             >
             </input>
-          </div>
+          
+            
+          </>
 
-          <div>
+          <>
             <label htmlFor="content" className="text-darkGrey"> CONTENT </label>
-            <textarea type="text" required={isCreated? true : false} name="content" id="content"
-              onChange= {(e) => handleChangeContent(e.target.value)}
-              className="p-2 border border-lightGrey rounded-[5px] w-[100%] max-h-50 overflow-y-scroll focus:ring-1 focus:ring-pastelViolet focus:border-strongViolet focus:outline-none"
-              placeholder="Enter note content"
-              
-            >
-            </textarea>
-          </div>
+            <textarea 
+                required={isCreated} 
+                name="content" 
+                id="content"
+                onChange={(e) => handleChangeContent(e.target.value)}
+                className="p-2 border border-lightGrey rounded-[5px] w-[100%] max-h-50 overflow-y-scroll focus:ring-1 focus:ring-pastelViolet focus:border-strongViolet focus:outline-none"
+                placeholder={isCreated ? "Enter note content" : content}
+            />
+          </>
 
-          <div>
+
+          <>
             <label htmlFor="date" className="text-darkGrey"> DEADLINE </label>
-            <input type="date" name="date" id="date"
+            <input type="date" name="date" id="date" placeholder={deadline}
               onChange= {(e) => handleChangeDeadline(e.target.value)}
-              className="p-2 border border-lightGrey rounded-[5px] w-[100%] focus:ring-1 focus:ring-pastelViolet focus:border-strongViolet focus:outline-none">
+              className="p-2 border border-lightGrey rounded-[5px] w-[100%] focus:ring-1 focus:ring-pastelViolet focus:border-strongViolet focus:outline-none"
+              >
+              
             </input>
-          </div>
+          </>
 
           <div className="flex flex-col">
             <label htmlFor="folder" className="text-darkGrey"> FOLDER </label>
@@ -142,7 +149,7 @@ const NoteModal = ( { id, open, setOpen, isUpdated, isCreated } ) => {
               className="p2 border border-lightGrey rounded-[5px] w-[50%] h-9 focus:ring-1 focus:ring-pastelViolet focus:border-strongViolet focus:outline-none"
             >
               <option value=""> 
-                Select Folder 
+                {isCreated? "Select Folder" : folder}
               </option>
 
               {useFolderStore.getState().foldersArr.map((folder) => (
@@ -154,13 +161,13 @@ const NoteModal = ( { id, open, setOpen, isUpdated, isCreated } ) => {
             </select>
           </div>
 
-          <div>
+          <>
             {tags?.length > 0 && (
               <div className="flex flex-center gap-2 flex-wrap mt-2">
                   {tags.map((tag, index) => (
                       <span key={index} className="flex items-center gap-1 text-sm text-slate-900 bg-lightGrey px-3 py-1 rounded">
                           # {tag}
-                          <button onClick = {(e) => handleRemoveTag(tag, e)}> {Delete} </button>
+                          <button onClick = {(e) => {e.preventDefault(); handleRemoveTag(tag, e)}}> {Delete} </button>
                       </span>
                   ))}
               </div>
@@ -172,12 +179,14 @@ const NoteModal = ( { id, open, setOpen, isUpdated, isCreated } ) => {
                 onChange={(e) => handleChangeTag(e.target.value)}
                 className="p-2 border border-lightGrey rounded-[5px] w-[50%] focus:ring-1 focus:ring-pastelViolet focus:border-strongViolet focus:outline-none">
               </input>
-              <button className="text-darkGrey" onClick={() => addNewTag}> {Add} </button>
+              <button className="text-darkGrey" onClick={() => {e.preventDefault(); addNewTag() }}> {Add} </button>
             </div>
-          </div>
+          </>
           <div className="flex flex-col"> 
             <label className="text-darkGrey"> NOTE COLOR  </label>
-            <button className=" w-11 h-5  rounded-[5px] border border-lightGrey hover:ring-pastelViolet hover:border-strongViolet hover:outline-none" style={{backgroundColor: backgroundColor}} onClick={pickerVisible? handleSketchPickerClose : handleSketchPickerOpen}></button> 
+            <button className=" w-11 h-5  rounded-[5px] border border-lightGrey hover:ring-pastelViolet hover:border-strongViolet hover:outline-none" style={{backgroundColor: backgroundColor}} 
+              onClick={pickerVisible? handleSketchPickerClose : handleSketchPickerOpen}>
+            </button> 
             {pickerVisible && (
               <SketchPicker className="mt-3" color={backgroundColor} onChange={(color) => handleChangeBackgroundColor(color)} /> 
             )}

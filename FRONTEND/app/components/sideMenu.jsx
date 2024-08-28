@@ -5,7 +5,7 @@ import { UserButton, SignedOut } from "@clerk/nextjs";
 const SideMenu = () => {
 
     return (
-    <div className="flex h-screen w-16 flex-col justify-between border-e bg-white">
+    <div className="flex h-auto w-16 flex-col justify-between border-e bg-white">
     <div>
         <div className="inline-flex size-16 items-center justify-center">
         <span className="grid size-10 place-content-center rounded-lg bg-gray-100 text-xs text-gray-600">

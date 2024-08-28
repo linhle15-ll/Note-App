@@ -47,7 +47,7 @@ export const addNewTag = () => {
 
     if (tag.trim() !== ""){
       tags.push(tag.trim());
-      useNoteStore.setState({tag: ""})
+      useNoteStore.setState({ tags: [...tags, tag.trim()], tag: "" });
     }
 }
 
@@ -74,7 +74,7 @@ export const handleRemoveTag = async (tagToRemove, e) => {
     const { tags } = useNoteStore.getState();
     const unRemovedTags = tags.filter((tags) => tags != tagToRemove)
 
-    await useNoteStore.setState({ tags : unRemovedTags });
+    useNoteStore.setState({ tags : unRemovedTags });
     console.log('Tag removed successfully', unRemovedTags)
 
 }
@@ -127,18 +127,20 @@ export const getNotes = async() => {
 
 export const getNote = async(id) => {
     try {
-        const res = axios.get(`http://localhost:5000/api/get-note/${id}`);
+        const res = await axios.get(`http://localhost:5000/api/get-note/${id}`);
         if (res.status === 200) {
             const note = res.data
             console.log("Note found: ", note);
-            useNoteStore.setState({ 
+            useNoteStore.setState({
                 title: note.title,
                 content: note.content,
                 tags: note.tags,
-                deadline: note.deadline,
                 folder: note.folder,
-                backgroundColor: note.backgroundColor,
-            })
+                deadline: note.deadline,
+                lastUpdated: note.lastUpdated,
+                backgroundColor: note.backgroundColor
+            });
+
         } else {
             console.error("Error finding note.")
         }
@@ -148,19 +150,20 @@ export const getNote = async(id) => {
 }
 export const deleteNote = async(id) => {
     try {
-        const res = axios.delete(`http://localhost:5000/api/delete-note/${id}`);
+        const res = await axios.delete(`http://localhost:5000/api/delete-note/${id}`);
         if (res.status === 200) {
             console.log('Note deleted successfully')
-            getNotes();
+            await getNotes();
         }
         console.error("Error deleting note.", res)
+        
     } catch (error) {
         console.error("Error deleting note.", error)
     }
 }
 
 export const updateNote = async(id) => {
-    const { title, content, tags, deadline, folder, backgroundColor} = useNoteStore.getState();
+    const { title, content, tags, deadline, folder, backgroundColor } = useNoteStore.getState();
 
     const formData = {
         title,
@@ -172,7 +175,7 @@ export const updateNote = async(id) => {
     }
 
     try {
-        const res = axios.put(`http://localhost:5000/api/update-note/${id}`, formData, {
+        const res = await axios.put(`http://localhost:5000/api/update-note/${id}`, formData, {
             headers: {
                 'Content-Type': 'application/json'
             }

@@ -1,10 +1,10 @@
 "use client"
 import React, { useRef, useState } from 'react';
-import { Button, Modal } from 'antd';
+import { Modal } from 'antd';
 import Draggable from 'react-draggable';
-import { handleChange } from  '../stores/folderStore'
+import { useFolderStore, addFolder, handleChangeName, updateFolder } from  '../stores/folderStore'
 
-const FolderModal = ( {open, setOpen} ) => {
+const FolderModal = ( {open, setOpen, isUpdated, isCreated} ) => {
   
   const [disabled, setDisabled] = useState(true);
   const [bounds, setBounds] = useState({
@@ -16,8 +16,20 @@ const FolderModal = ( {open, setOpen} ) => {
 
   const draggleRef = useRef(null);
 
-  const handleOk = (e) => {
-    console.log(e);
+  const handleOk = async(e) => {
+    const { name } = useFolderStore.getState();
+
+    if (isCreated) {
+      if (!name){
+        alert("Folder's name is required.")
+        return;
+      }
+      await addFolder();
+    }
+    else if (isUpdated) {
+      await updateFolder(id);
+    }
+
     setOpen(false);
   };
 
@@ -77,7 +89,7 @@ const FolderModal = ( {open, setOpen} ) => {
       >
         <div className="text-darkGrey"> Folder name </div>
         <input type="text" 
-            onChange= {(e) => handleChange(e.target.value)}
+            onChange= {(e) => handleChangeName(e.target.value)}
             className="p-2 border border-lightGrey rounded-[5px] w-[100%] focus:ring-1 focus:ring-pastelViolet focus:border-strongViolet focus:outline-none">
         </input>
         
@@ -85,4 +97,5 @@ const FolderModal = ( {open, setOpen} ) => {
     </>
   );
 };
+
 export default FolderModal;

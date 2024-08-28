@@ -21,10 +21,10 @@ export default function Home() {
                   Welcome to NOTIE
                 </div>
 
-                <p className="text-h10 hidden text-white/90 sm:mt-4 sm:block md:text-h9">
+                <div className="text-h10 hidden text-white/90 sm:mt-4 sm:block md:text-h9">
                   Want to have a better experience with note? <br />
                   Let <span className="font-700"> Notie </span>be your <span className="font-700">Note Bestie!</span>
-                </p>
+                </div>
 
                 <div className="mt-4 md:mt-8">
                   <a
