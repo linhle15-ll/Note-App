@@ -27,7 +27,7 @@ export const handleReset = () => {
 }
 
 export const addFolder = async() => {
-    const { name, files } = useFolderStore.getState();
+    const { name, files } = useFolderStore.getState()
 
     try {
         const res = await axios.post('http://localhost:5000/api/add-folder', {
@@ -41,14 +41,14 @@ export const addFolder = async() => {
         
         if (res.status === 200) {
             console.log('Folder added successfully')
-            useFolderStore.setState({ foldersArr: res.data})
-            handleReset();
+            getFolders()
+            handleReset()
         }
-        console.error('Error creating folder', res.status)
-        handleReset();
+        console.error('Error creating folder')
+        handleReset()
     } catch (error) {
         console.error('Error creating folder', error)
-        handleReset();
+        handleReset()
     }
 }
 
@@ -68,10 +68,10 @@ export const getFolders = async() => {
 
 export const deleteFolder = async(id) => {
     try {
-        const res = await axios.delete(`http://localhost:5000/api/delete-folder/${id}`);
+        const res = await axios.delete(`http://localhost:5000/api/delete-folder/${id}`)
         if (res.status === 200) {
             console.log('Folder deleted successfully')
-            getFolders();
+            await getFolders()
         }
         console.error("Error deleting folder.", res.status)
     } catch (error) {
@@ -79,19 +79,21 @@ export const deleteFolder = async(id) => {
     }
 }
 
-export const updateFolder = async(id, newName) => {
+export const updateFolder = async(id) => {
+    const { name, files } = useFolderStore.getState()
     try {
         const res = await axios.put(`http://localhost:5000/api/update-folder/${id}`, {
-            name: newName
+            name, 
+            files
         }, {
             headers: {
                 'Content-Type': 'application/json'
             }
-        });
+        })
         
         if (res.status === 200) {
             console.log('Folder updated successfully')
-            getFolders();
+            getFolders()
         }
         console.error('Error updating folder', res.status)
     } catch (error) {

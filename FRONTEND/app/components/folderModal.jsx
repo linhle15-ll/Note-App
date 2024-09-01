@@ -2,9 +2,9 @@
 import React, { useRef, useState } from 'react';
 import { Modal } from 'antd';
 import Draggable from 'react-draggable';
-import { useFolderStore, addFolder, handleChangeName, updateFolder } from  '../stores/folderStore'
+import { useFolderStore, addFolder, handleChangeName, updateFolder, getFolders } from  '../stores/folderStore'
 
-const FolderModal = ( {open, setOpen, isUpdated, isCreated} ) => {
+const FolderModal = ( {id, open, setOpen, isUpdated, isCreated} ) => {
   
   const [disabled, setDisabled] = useState(true);
   const [bounds, setBounds] = useState({
@@ -25,12 +25,13 @@ const FolderModal = ( {open, setOpen, isUpdated, isCreated} ) => {
         return;
       }
       await addFolder();
+      setOpen(false);
     }
     else if (isUpdated) {
       await updateFolder(id);
+      await getFolders();
+      setOpen(false);
     }
-
-    setOpen(false);
   };
 
   const handleCancel = (e) => {
