@@ -1,5 +1,5 @@
 import React from 'react'
-
+import dynamic from "next/dynamic"
 const About = () => {
     return (
     <div>
@@ -216,4 +216,4 @@ const About = () => {
     )
 }
 
-export default About
+export default dynami (() => Promise.resolve(About), {ssr: false})

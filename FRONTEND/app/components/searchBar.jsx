@@ -1,32 +1,33 @@
 'use client'
 import React, { useState } from "react";
+import dynamic from "next/dynamic"
 import { useNoteStore } from '../stores/noteStore'
 import { useFolderStore  } from "../stores/folderStore";
 
 const SearchBar = () => {
 
-    const [ search, setSearch ] = useState("")
-    const [ filteredItem, setFilteredItem ] = useState("");
+    // const [ search, setSearch ] = useState("")
+    // const [ filteredItem, setFilteredItem ] = useState("");
 
-    const { notesArr } = useNoteStore.getState();
-    const { foldersArr } = useFolderStore.getState();
+    // const { notesArr } = useNoteStore.getState();
+    // const { foldersArr } = useFolderStore.getState();
 
-    const itemsArr = notesArr.concat(foldersArr)
-    const filteredItems = itemsArr.filter(item =>
-        item?.title?.toLowerCase().includes(search.toLowerCase()) ||
-        item?.content?.toLowerCase().includes(search.toLowerCase()) ||
-        item?.tags?.some(tag => tag?.toLowerCase().includes(search.toLowerCase())) || // some: check at least one item in the tags array meet the condition
-        item?.deadline?.includes(search) ||
-        item?.lastUpdated?.includes(search) ||
-        item?.folder?.toLowerCase().includes(search.toLowerCase()) ||
-        item?.backgroundColor?.toLowerCase().includes(search.toLowerCase()) ||
-        item?.name?.toLowerCase().includes(search.toLowerCase()) 
-    );
+    // const itemsArr = notesArr.concat(foldersArr)
+    // const filteredItems = itemsArr.filter(item =>
+    //     item?.title?.toLowerCase().includes(search.toLowerCase()) ||
+    //     item?.content?.toLowerCase().includes(search.toLowerCase()) ||
+    //     item?.tags?.some(tag => tag?.toLowerCase().includes(search.toLowerCase())) || // some: check at least one item in the tags array meet the condition
+    //     item?.deadline?.includes(search) ||
+    //     item?.lastUpdated?.includes(search) ||
+    //     item?.folder?.toLowerCase().includes(search.toLowerCase()) ||
+    //     item?.backgroundColor?.toLowerCase().includes(search.toLowerCase()) ||
+    //     item?.name?.toLowerCase().includes(search.toLowerCase()) 
+    // );
 
-    setFilteredItem(filteredItems)
+    // setFilteredItem(filteredItems)
 
     const handleSearChange = (e) => {
-        setSearch(e.target.value)
+        // setSearch(e.target.value)
     }
 
     return (
@@ -63,4 +64,7 @@ const SearchBar = () => {
     );
 }
 
-export default SearchBar;
+
+export default dynamic (() => Promise.resolve(SearchBar), {ssr: false})
+
+// export default SearchBar;

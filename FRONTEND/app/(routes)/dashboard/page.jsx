@@ -1,5 +1,6 @@
 "use client"
 import React, { useState } from 'react'
+import dynamic from 'next/dynamic'
 import DashboardHeader from '../../components/dashboardHeader'
 import SideMenu from "../../components/sideMenu"
 import { Plus } from '../../utils/icons'
@@ -100,4 +101,5 @@ const Dashboard = () => {
     )
 }
 
-export default Dashboard
+// export default Dashboard
+export default dynamic (() => Promise.resolve(Dashboard), {ssr: false})
