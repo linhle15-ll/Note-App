@@ -26,7 +26,7 @@ export const handleChangeName = (value) => {
 }
 
 export const handleReset = () => {
-    useFolderStore.setState({folderName: ""})
+    useFolderStore.setState({initialFolderValues})
 }
 
 export const addFolder = async() => {
@@ -102,4 +102,16 @@ export const updateFolder = async(id) => {
     } catch (error) {
         console.error('Error updating folder', error)
     }
+}
+
+export const addFileToFolder = (file) => {
+    useFolderStore.setState((state) => ({
+        files: [...state.files, file]
+    }))
+}
+
+export const removeFildeFromFolder = (file) => {
+    useFolderStore.setState((state) => ({
+        files: state.files.filter((f) => f !== file)
+    }))
 }

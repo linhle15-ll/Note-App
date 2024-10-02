@@ -9,14 +9,10 @@ const FolderSchema = new mongoose.Schema({
         maxLength: 40
     },
     files: {
-        required: true,
-        type: [mongoose.Schema.Types.ObjectId], 
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Note', // Reference to Note model
         default: [],
     },
-    updatedAt: {
-        type: Date,
-        default: Date.now
-    }
 })
 
 module.exports = mongoose.model("Folder", FolderSchema)

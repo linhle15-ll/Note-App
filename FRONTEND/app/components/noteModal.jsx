@@ -2,11 +2,22 @@
 import React, { useRef, useState } from 'react';
 import { Modal } from 'antd';
 import Draggable from 'react-draggable';
-import { SketchPicker } from 'react-color'
-import { useNoteStore, addNote, updateNote, handleChangeTitle, handleChangeContent, handleChangeDeadline, handleChangeFolder, handleChangeTag, addNewTag, handleRemoveTag, handleChangeBackgroundColor } from '../stores/noteStore';
-import { useFolderStore } from '../stores/folderStore';
-
 import { Add, Delete } from '../utils/icons';
+import { SketchPicker } from 'react-color'
+import { useFolderStore } from '../stores/folderStore';
+import { 
+  useNoteStore, 
+  addNote, 
+  updateNote, 
+  handleChangeTitle, 
+  handleChangeContent, 
+  handleChangeDeadline, 
+  handleChangeFolder, 
+  handleChangeTag, 
+  addNewTag, 
+  handleRemoveTag, 
+  handleChangeBackgroundColor 
+} from '../stores/noteStore';
 
 const NoteModal = ( { id, open, setOpen, isUpdated, isCreated } ) => {
   const [disabled, setDisabled] = useState(true);

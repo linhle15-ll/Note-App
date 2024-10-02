@@ -3,7 +3,7 @@ const router = express.Router();
 const NoteSchema = require('../models/noteModel')
 const FolderSchema = require('../models/folderModel')
 const { addNote, getNotes, getNote, deleteNote, updateNote } = require("../controllers/note")
-const { addFolder, getFolders, deleteFolder, updateFolder } = require("../controllers/folder")
+const { addFolder, getFolders, getFolderById, deleteFolder, updateFolder } = require("../controllers/folder")
 
 router.post('/add-note', async(req, res) => {
     const { title, content, tags, deadline, folder, backgroundColor } = req.body; // handle case when tags is an empty array
@@ -78,7 +78,7 @@ router.post('/add-note', async(req, res) => {
         }
     })
 
-    .get('/get-note/:id', async(req, res) => {
+    .get(`/get-note/:id`, async(req, res) => {
         const { id } = req.params; 
         try {
             const note = await NoteSchema.findById(id)
@@ -116,6 +116,17 @@ router.post('/add-note', async(req, res) => {
             res.status(200).json(folders)
         } catch (error) {
             res.status(500).json({message: "Server error"})
+        }
+    })
+
+    .get('/get-folder/:id', async(req, res) => {
+        const { id } = req.params;
+        
+        try {
+            const notes = await NoteSchema.find({ folder: id});
+            res.json(notes);
+        } catch (error) {
+            res.status(500).json({message: "Error fetching notes."})
         }
     })
     .delete('/delete-folder/:id', async(req, res) => {

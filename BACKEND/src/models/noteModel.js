@@ -3,13 +3,15 @@ const mongoose = require('mongoose');
 const NoteSchema = new mongoose.Schema ({
     type: {
         type: String,
-        default: "note"
+        default: 'note'
     },
     title: {
         type: String,
         required: true,
         trim: true,
-        maxLength: 40
+        maxLength: 40,
+        validate: (v) => v.trim().length > 0, // Ensure title is not just white space
+        message: 'Title cannot be empty',
     },
     content: {
         type: String,
@@ -20,7 +22,10 @@ const NoteSchema = new mongoose.Schema ({
     tags: {
         type: [String],
         required: false,
-        validate: [arrayLimit, `{PATH} exceeds the limit of 5.`]
+        validate: {
+            validator: (val) => val.length <= 5,
+            message: `{VALUE} exceeds the limit of 5.`,
+        }
         
     },
     deadline: {
@@ -29,6 +34,7 @@ const NoteSchema = new mongoose.Schema ({
     },
     folder: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: 'Folder',
         required: false
     },
     backgroundColor: {
@@ -38,9 +44,5 @@ const NoteSchema = new mongoose.Schema ({
 }, {
     timestamps: true
 })
-
-function arrayLimit(val) {
-    return val.length <= 5;
-}
 
 module.exports = mongoose.model('Note', NoteSchema);
