@@ -1,6 +1,9 @@
 import { create } from "zustand"
 import { devtools, subscribeWithSelector, persist } from 'zustand/middleware'
 import axios from 'axios'
+import { useNoteStore } from "./noteStore"
+
+const {notesArray} = useNoteStore.getState()
 
 const initialFolderValues = {
     foldersArr: [],

@@ -41,14 +41,13 @@ exports.deleteFolder = async(req, res) => {
 
 exports.updateFolder = async(req, res) => {
     const { id } = req.params;
-    const { name, files } = req.body;
+    const { name } = req.body;
 
     try {
         const updatedFolder = await FolderSchema.findByIdAndUpdate(
             id, 
             {
                 name, 
-                // files
             }, 
             {new: true}
         );

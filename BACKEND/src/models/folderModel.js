@@ -10,7 +10,7 @@ const FolderSchema = new mongoose.Schema({
     },
     files: {
         required: true,
-        type: [mongoose.Schema.Types.ObjectId], //???
+        type: [mongoose.Schema.Types.ObjectId], 
         default: [],
     },
     updatedAt: {

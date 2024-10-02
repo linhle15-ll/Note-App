@@ -28,7 +28,7 @@ const NoteSchema = new mongoose.Schema ({
         required: false
     },
     folder: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         required: false
     },
     backgroundColor: {
