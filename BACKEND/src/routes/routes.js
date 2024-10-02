@@ -112,7 +112,7 @@ router.post('/add-note', async(req, res) => {
     
     .get('/get-folders', async(req, res) => {
         try {
-            const folders = await FolderSchema.find().sort({ lastUpdated: -1 });
+            const folders = await FolderSchema.find().sort({ updatedAt: -1 });
             res.status(200).json(folders)
         } catch (error) {
             res.status(500).json({message: "Server error"})
