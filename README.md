@@ -1,5 +1,5 @@
 
-# PennyWise - Finance Tracker App
+# Notie - Note Assistant App
 
 ## Table of Contents 
 <ol>
